@@ -1,0 +1,29 @@
+{
+  "text_models": {
+    "phi-4-reasoning-plus": {
+      "model_id": "microsoft/Phi-4-reasoning-plus",
+      "type": "text",
+      "precision": "fp32",
+      "max_length": 4096,
+      "description": "Microsoft's Phi-4 model with enhanced reasoning capabilities"
+    }
+  },
+  "vision_models": {
+    "phi-3-vision": {
+      "model_id": "microsoft/Phi-3-vision-128k-instruct",
+      "type": "multimodal",
+      "precision": "fp16",
+      "max_length": 2048,
+      "description": "Microsoft's Phi-3 with vision capabilities"
+    }
+  },
+  "multimodal_models": {
+    "phi-4-multimodal": {
+      "model_id": "microsoft/Phi-4-multimodal-instruct",
+      "type": "multimodal",
+      "precision": "fp16",
+      "max_length": 2048,
+      "description": "Phi-4-multimodal-instruct is a lightweight open multimodal foundation model that leverages the language, vision, and speech research and datasets used for Phi-3.5 and 4.0 models"
+    }
+  }
+}
