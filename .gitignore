@@ -1,5 +1,11 @@
 .venv
 .gradio
 .idea
+models/gguf
 
 .env
+
+# Exclude all __pycache__ directories
+__pycache__/
+*/__pycache__/*
+

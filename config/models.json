@@ -1,5 +1,19 @@
 {
   "text_models": {
+    "phi-4-mini-reasoning": {
+      "model_id": "microsoft/Phi-4-mini-reasoning",
+      "type": "text",
+      "precision": "fp32",
+      "max_length": 4096,
+      "description": "Microsoft's Phi-4 mini model with enhanced reasoning capabilities"
+    },
+    "phi-4-mini-instruct": {
+      "model_id": "microsoft/Phi-4-mini-instruct",
+      "type": "text",
+      "precision": "fp16",
+      "max_length": 4096,
+      "description": "Microsoft's Phi-4 mini model"
+    },
     "phi-4-reasoning-plus": {
       "model_id": "microsoft/Phi-4-reasoning-plus",
       "type": "text",
@@ -10,7 +24,7 @@
   },
   "vision_models": {
     "phi-3-vision": {
-      "model_id": "microsoft/Phi-3-vision-128k-instruct",
+      "model_id": "microsoft/Phi-3.5-vision-instruct",
       "type": "multimodal",
       "precision": "fp16",
       "max_length": 2048,

@@ -6,6 +6,7 @@ from transformers import (
     AutoTokenizer, AutoModelForCausalLM, AutoProcessor,
     AutoModelForVision2Seq, pipeline
 )
+from models.llama_model import LlamaModelManager
 
 
 class ModelManager:
@@ -20,6 +21,14 @@ class ModelManager:
         self.loaded_tokenizers = {}
         self.loaded_processors = {}
         self.loaded_pipelines = {}
+
+        # For GGUF models
+        self.llama_manager = None
+        try:
+            self.llama_manager = LlamaModelManager()
+            print("GGUF model support enabled")
+        except ImportError:
+            print("GGUF model support not enabled (llama-cpp-python not installed)")
 
         # Check CUDA availability first
         cuda_available = torch.cuda.is_available()
@@ -95,6 +104,11 @@ class ModelManager:
         if model_type is None or model_type == "multimodal":
             available_models.extend(self.models_config.get("multimodal_models", {}).keys())
 
+        # Add GGUF models if available
+        if self.llama_manager is not None and (model_type is None or model_type == "text"):
+            gguf_models = self.llama_manager.get_available_models()
+            available_models.extend(gguf_models)
+
         return available_models
 
     def _get_model_config(self, model_name: str) -> Dict[str, Any]:
@@ -113,6 +127,12 @@ class ModelManager:
             model_name: Name of the model as defined in the config
             use_pipeline: Whether to use the pipeline API or load the model directly
         """
+        # Check if it's a GGUF model
+        if self.llama_manager is not None and model_name in self.llama_manager.get_available_models():
+            # Load with llama_manager
+            self.llama_manager.load_model(model_name, n_gpu_layers=-1)  # Use all GPU layers
+            return
+
         if model_name in self.loaded_models and not use_pipeline:
             print(f"Model '{model_name}' already loaded.")
             return
@@ -120,6 +140,9 @@ class ModelManager:
         if model_name in self.loaded_pipelines and use_pipeline:
             print(f"Pipeline for '{model_name}' already loaded.")
             return
+
+        # Empty cache before loading
+        torch.cuda.empty_cache()
 
         # Get model configuration
         model_config = self._get_model_config(model_name)
@@ -167,14 +190,16 @@ class ModelManager:
         if model_type == "text":
             self.loaded_models[model_name] = AutoModelForCausalLM.from_pretrained(
                 model_id,
-                device_map="auto",
+                device_map="cuda",
                 torch_dtype=dtype,
+                offload_folder=None,  # Prevent CPU offloading
+                offload_state_dict=False,  # Prevent state dict offloading
                 **(quantization_config or {})
             )
         elif model_type == "vision":
             self.loaded_models[model_name] = AutoModelForVision2Seq.from_pretrained(
                 model_id,
-                device_map="auto",
+                device_map="cuda",
                 torch_dtype=dtype,
                 **(quantization_config or {})
             )
@@ -182,7 +207,7 @@ class ModelManager:
             # Most multimodal models on HF use CausalLM architecture
             self.loaded_models[model_name] = AutoModelForCausalLM.from_pretrained(
                 model_id,
-                device_map="auto",
+                device_map="cuda",
                 torch_dtype=dtype,
                 **(quantization_config or {})
             )
@@ -223,6 +248,16 @@ class ModelManager:
         Returns:
             Generated text as a string
         """
+        # Check if it's a GGUF model
+        if self.llama_manager is not None and model_name in self.llama_manager.get_available_models():
+            # Use the llama_manager to generate text
+            return self.llama_manager.generate_text(
+                model_name,
+                prompt,
+                max_tokens=max_length or 512,
+                temperature=kwargs.get("temperature", 0.7)
+            )
+
         model_config = self._get_model_config(model_name)
 
         if model_config["type"] != "text":

@@ -11,3 +11,4 @@ scipy>=1.11.0
 einops>=0.7.0
 safetensors>=0.4.0
 bitsandbytes>=0.41.0  # for int8 quantization
+llama-cpp-python>=0.2.17  # for GGUF models

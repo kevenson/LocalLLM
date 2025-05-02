@@ -66,13 +66,13 @@ def main():
             print(f"Error loading model {args.model}: {str(e)}")
 
     # Launch the UI
-    #ui = ChatUI(model_manager)
-    #ui.launch()
+    ui = ChatUI(model_manager)
+    ui.launch()
 
     # Launch the UI
-    from ui.minimal_chat_ui import MinimalChatUI
-    ui = MinimalChatUI(model_manager)
-    ui.launch()
+    # from ui.minimal_chat_ui import MinimalChatUI
+    # ui = MinimalChatUI(model_manager)
+    # ui.launch()
 
 
 if __name__ == "__main__":

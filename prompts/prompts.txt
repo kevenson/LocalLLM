@@ -1,0 +1,38 @@
+Analyze this OCR data from Google Vision and extract the names and details of veterans engraved on it. For each field that isn't present in the image, use an empty string. If dates are shown in a different format, convert them to MM/DD/YYYY if possible. If only years are shown, use MM/DD/YYYY format with --/-- as placeholder for unknown month/day. Order the persons array from top to bottom as they appear in the image. Your response must be complete, valid JSON that parses correctly and includes all closing brackets and braces. Do not truncate the output.
+
+Return ONLY a valid JSON object with the following structure for each person identified:
+
+{
+  "persons": [
+    {
+      "full_name": "Complete name as shown",
+      "first_name": "First name or initial",
+      "middle_name": "Middle name or initial if present",
+      "last_name": "Last name",
+      "service_number": "Service number if shown",
+      "rank": "Military rank if shown",
+      "branch": "Military branch if shown",
+      "honors_awards": "Military honors and awards if shown",
+      "date_of_birth": "Birth date in MM/DD/YYYY format if shown",
+      "date_of_death": "Death date in MM/DD/YYYY format if shown",
+      "age": "Age if shown"
+    }
+  ]
+}
+The prompt that follows will include the OCR data. Please respond ONLY with the JSON details from above.
+
+OCR DATA:
+4082 SERCE ARE
+TLFIELDING
+YAL AUSTRALINAIR FORCE
+2TH JUNE 1942 AGE 24
+CREATER LOVE HATH NO MAN
+FLYING OFFICER
+PJ FINCH
+AUSTRALIAN
+IMPERIAL
+FORCES
+2709A PRIVATE
+A.SAARIJARVI MM.
+4TH AUSTRALIAN PIONEERS
+28TH OCTOBER 1918 AGE 45

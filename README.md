@@ -2,6 +2,9 @@
 
 A simple application for testing Hugging Face models on your local NVIDIA GPU.
 
+### TODO: add support for LLama models
+#### and multimodal: https://huggingface.co/microsoft/Phi-4-multimodal-instruct
+
 ## Features
 
 - Test multiple Hugging Face models (text, vision, multimodal)
